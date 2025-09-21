@@ -1,5 +1,6 @@
 [package]
 name = "error-accumulator"
+description = "Utility to make it easier for developers to write input validation."
 version = "0.1.0"
 edition = "2024"
 authors = ["MattesWhites"]
