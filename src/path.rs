@@ -131,7 +131,7 @@ impl FromStr for PathSegment {
                 let idx_str = &s[idx + 1..s.len() - 1];
                 let field_idx = idx_str.parse()?;
                 return Ok(Self::Array {
-                    name: (&s[..idx]).parse()?,
+                    name: s[..idx].parse()?,
                     index: field_idx,
                 });
             } else {
@@ -196,7 +196,7 @@ impl<'a> TryFrom<&'a str> for FieldName {
 }
 
 fn validate_str_as_field_name(name: &str) -> Result<(), Error> {
-    if name.contains(&INVALID_FIELD_NAME_CHARS) {
+    if name.contains(INVALID_FIELD_NAME_CHARS) {
         Err(Error::InvalidCharInName(name.to_string()))
     } else {
         Ok(())

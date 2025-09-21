@@ -31,7 +31,8 @@ cargo run --example requester -- -c examples/config.yaml
 <summary>
 Example output
 </summary>
-```shell
+
+```
 > cargo run --example requester --quiet -- -c examples/config.yaml
 Error: unknown time unit "sek", supported units: ns, us/µs, ms, sec, min, hours, days, weeks, months, years (and few variations)
 
@@ -41,7 +42,7 @@ Location:
 
 After unit fix:
 
-```shell
+```
 > cargo run --example requester --quiet -- -c examples/config.yaml
 Error: invalid StatusCode
 
@@ -54,7 +55,7 @@ Location:
 
 After status code fix:
 
-```shell
+```
 > cargo run --example requester --quiet -- -c examples/config.yaml
 Error: invalid URL
 
@@ -67,7 +68,7 @@ Location:
 
 After URL fix:
 
-```shell
+```
 > cargo run --example requester --quiet -- -c examples/config.yaml
 Error: error sending request for url (http://no.inter.net/)
 
@@ -89,7 +90,7 @@ cargo run --example requester -- -c examples/config.yaml --accumulate
 
 Output:
 
-```shell
+```
 Error: Accumulated errors:
 - interval: unknown time unit "sek", supported units: ns, us/µs, ms, sec, min, hours, days, weeks, months, years (and few variations)
 - hosts[0].url: error sending request for url (http://no.inter.net/)

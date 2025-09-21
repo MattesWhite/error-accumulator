@@ -144,9 +144,7 @@ mod tests {
         let (res,) = ErrorAccumulator::new()
             .array(n("foo"))
             .of_structs(vec!["42", "21", "33"], |rec, value| {
-                rec.field(n("num"), value.parse())
-                    .on_ok(|num| Test(num))
-                    .finish()
+                rec.field(n("num"), value.parse()).on_ok(Test).finish()
             })
             .finish()
             .analyse()

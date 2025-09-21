@@ -90,7 +90,7 @@ mod no_acc {
             .map(|host| {
                 StatusCode::from_u16(host.expected_status)
                     .wrap_err(eyre!("invalid StatusCode"))
-                    .map(|sc| {
+                    .and_then(|sc| {
                         host.url
                             .parse()
                             .wrap_err(eyre!("invalid URL"))
@@ -99,7 +99,6 @@ mod no_acc {
                                 expected_status: sc,
                             })
                     })
-                    .flatten()
             })
             .collect::<Result<Vec<_>, eyre::Report>>()?;
 

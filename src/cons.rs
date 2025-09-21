@@ -41,17 +41,13 @@ impl<E> Append<E> for Nil {
 impl ToTuple for Nil {
     type List = ();
 
-    fn unwrap_tuple(self) -> Self::List {
-        ()
-    }
+    fn unwrap_tuple(self) -> Self::List {}
 }
 
 impl AsRefTuple for Nil {
     type Ref<'t> = ();
 
-    fn as_unwraped_tuple(&self) -> Self::Ref<'_> {
-        ()
-    }
+    fn as_unwraped_tuple(&self) -> Self::Ref<'_> {}
 }
 
 impl<H, T, E> Append<E> for Cons<H, T>
@@ -173,7 +169,7 @@ mod tests {
             .append('c')
             .append("str")
             .unwrap_tuple();
-        assert_eq!(list.0, true);
+        assert!(list.0);
         assert_eq!(list.1, 4);
         assert_eq!(list.2, 'c');
         assert_eq!(list.3, "str");
