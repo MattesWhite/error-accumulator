@@ -1,0 +1,134 @@
+# error-accumulator
+
+[![Crates.io](https://img.shields.io/crates/v/error-accumulator.svg)](https://crates.io/crates/error-accumulator)
+[![Docs.rs](https://docs.rs/error-accumulator/badge.svg)](https://docs.rs/error-accumulator)
+[![CI](https://github.com/MattesWhite/error-accumulator/workflows/CI/badge.svg)](https://github.com/MattesWhite/error-accumulator/actions)
+
+
+This crate provides utility to make it easier for developers to write input validation that:
+
+1. Tries to find as many errors as possible before returning.
+2. Not only validates but also converts input so we get a types output that uphold the checked invariants.
+
+## Motivation
+
+Imagine you want to enter a new password on a website.
+On first try you get a 'password must contain capital letters'.
+On the next try you get 'password must contain numbers'.
+On the third try you get 'passowrd must contain special characters'.
+This is not to uncommon and many people know what I'm talking about.
+Everywhere user input must be validated, be it websites, config files or others,
+  it is very common that validation stops at the first try and returns that error immediately.
+Rust makes this even easier by just using the ?-operator.
+
+The example `requester` does the same thing try it out and get it running with the provided `config.yaml`:
+
+```shell
+cargo run --example requester -- -c examples/config.yaml
+```
+
+<details>
+<summary>
+Example output
+</summary>
+```shell
+> cargo run --example requester --quiet -- -c examples/config.yaml
+Error: unknown time unit "sek", supported units: ns, us/µs, ms, sec, min, hours, days, weeks, months, years (and few variations)
+
+Location:
+    examples/requester.rs:86:24
+```
+
+After unit fix:
+
+```shell
+> cargo run --example requester --quiet -- -c examples/config.yaml
+Error: invalid StatusCode
+
+Caused by:
+    invalid status code
+
+Location:
+    examples/requester.rs:92:22
+```
+
+After status code fix:
+
+```shell
+> cargo run --example requester --quiet -- -c examples/config.yaml
+Error: invalid URL
+
+Caused by:
+    relative URL without a base
+
+Location:
+    examples/requester.rs:96:30
+```
+
+After URL fix:
+
+```shell
+> cargo run --example requester --quiet -- -c examples/config.yaml
+Error: error sending request for url (http://no.inter.net/)
+
+Caused by:
+   0: client error (Connect)
+   1: dns error
+   2: failed to lookup address information: Name or service not known
+
+Location:
+    examples/requester.rs:67:24
+```
+</details>
+
+You made it, great! Now reset `config.yaml` and run the example again with `--accumulate` to use the utilities provided by this crate:
+
+```shell
+cargo run --example requester -- -c examples/config.yaml --accumulate
+```
+
+Output:
+
+```shell
+Error: Accumulated errors:
+- interval: unknown time unit "sek", supported units: ns, us/µs, ms, sec, min, hours, days, weeks, months, years (and few variations)
+- hosts[0].url: error sending request for url (http://no.inter.net/)
+- hosts[2].url: relative URL without a base
+- hosts[2].expected_status: invalid status code
+
+
+Location:
+    examples/requester.rs:60:9
+```
+
+- All errors at once.
+- Paths to where the errors originated.
+
+Great!
+
+## Installation
+
+### Cargo
+
+* Install the rust toolchain in order to have cargo installed by following
+  [this](https://www.rust-lang.org/tools/install) guide.
+* run `cargo install error-accumulator`
+
+## License
+
+Licensed under either of
+
+ * Apache License, Version 2.0
+   ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license
+   ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
+
+## Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+dual licensed as above, without any additional terms or conditions.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).

@@ -1,0 +1,8 @@
+interval: 1sek
+hosts:
+  - url: http://no.inter.net
+    expected_status: 404
+  - url: https://google.com
+    expected_status: 200
+  - url: youtube.com
+    expected_status: 1000
