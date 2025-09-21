@@ -10,6 +10,25 @@ This crate provides utility to make it easier for developers to write input vali
 1. Tries to find as many errors as possible before returning.
 2. Not only validates but also converts input so we get a types output that uphold the checked invariants.
 
+## Roadmap
+
+Currently, the crate provides the basic API that I wanted to provide with most features ready to use. However, there are some bigger features I want to implement before a potential v1.0 release.
+
+### Parser trait
+
+The crate should provide a trait to validate and convert one type into another while accumulating errors.
+This way it becomes easier to re-use the code, e.g. in nested structs.
+
+However, there are a number of open questions how the trait and its methods should look like and how to handle structs, arrays and fields.
+In order to prevent to many breaking changes I need more time to figure out the best API design.
+
+### Derive macro
+
+Once a stable trait is available I want to implement a derive macro so users have less boilerplate code to write.
+But again there are many options how this can be implemented and how types that don't implement the crate's trait should be handled.
+How can common parsing traits like `FromStr` or `TryFrom` be leveraged?
+What are the best defaults? Etc.
+
 ## Motivation
 
 Imagine you want to enter a new password on a website.
@@ -107,13 +126,17 @@ Location:
 
 Great!
 
-## Installation
+## Similar crates
 
-### Cargo
-
-* Install the rust toolchain in order to have cargo installed by following
-  [this](https://www.rust-lang.org/tools/install) guide.
-* run `cargo install error-accumulator`
+A crate with a similar focus and purpose is the popular [validator crate](https://crates.io/crates/validator).
+It's design was also one of the major inspirations for error-accumulator.
+Validator is way more mature than error-accumulator and comes with a derive macro,
+  however, it focuses on validation only.
+The issue is that [`Validator::validate()`](https://docs.rs/validator/latest/validator/trait.Validate.html#tymethod.validate) takes the input only by reference.
+As a result, a user can't know when receiving an instance of a type implementing `Validator` if the validation was already called or not,
+  opening the possibility of not calling `validate()` at all.
+In contrast, error-accumulator combines validation and conversion into one step, following the idea of 'parse don't validate',
+  so it's easier to ensure at compile time that data was already checked for validity and that invariants are enforced.
 
 ## License
 
